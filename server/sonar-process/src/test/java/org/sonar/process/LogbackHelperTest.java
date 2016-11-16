@@ -37,12 +37,17 @@ import org.junit.AfterClass;
 import org.junit.Before;
 import org.junit.Rule;
 import org.junit.Test;
+import org.junit.rules.ExpectedException;
 import org.junit.rules.TemporaryFolder;
+import org.sonar.process.LogbackHelper.LogProcess;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.Assert.fail;
 
 public class LogbackHelperTest {
+
+  @Rule
+  public ExpectedException expectedException = ExpectedException.none();
 
   @Rule
   public TemporaryFolder temp = new TemporaryFolder();
@@ -166,5 +171,29 @@ public class LogbackHelperTest {
     } catch (MessageException e) {
       assertThat(e).hasMessage("Unsupported value for property sonar.log.rollingPolicy: unknown:foo");
     }
+  }
+
+  @Test
+  public void LogProcess_fromProcessName_searches_process_by_its_name() {
+    assertThat(LogProcess.fromProcessName("app")).isEqualTo(LogProcess.APP);
+    assertThat(LogProcess.fromProcessName("ce")).isEqualTo(LogProcess.CE);
+    assertThat(LogProcess.fromProcessName("es")).isEqualTo(LogProcess.ES);
+    assertThat(LogProcess.fromProcessName("web")).isEqualTo(LogProcess.WEB);
+  }
+
+  @Test
+  public void LogProcess_fromProcessName_throws_IAE_if_name_is_null() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("Process [null] does not exist");
+
+    LogProcess.fromProcessName(null);
+  }
+
+  @Test
+  public void LogProcess_fromProcessName_throws_IAE_if_name_does_not_exist() {
+    expectedException.expect(IllegalArgumentException.class);
+    expectedException.expectMessage("Process [foo] does not exist");
+
+    LogProcess.fromProcessName("foo");
   }
 }

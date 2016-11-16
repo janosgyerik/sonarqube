@@ -43,6 +43,7 @@ import javax.annotation.CheckForNull;
 import org.apache.commons.lang.StringUtils;
 import org.slf4j.LoggerFactory;
 
+import static java.lang.String.format;
 import static java.util.Collections.unmodifiableSet;
 import static java.util.Objects.requireNonNull;
 import static org.slf4j.Logger.ROOT_LOGGER_NAME;
@@ -72,6 +73,15 @@ public class LogbackHelper {
 
     public String getFileNamePrefix() {
       return fileNamePrefix;
+    }
+
+    public static LogProcess fromProcessName(String processName) {
+      for (LogProcess process : values()) {
+        if (process.getProcessName().equals(processName)) {
+          return process;
+        }
+      }
+      throw new IllegalArgumentException(format("Process [%s] does not exist", processName));
     }
   }
   private static final String ALL_LOGS_TO_CONSOLE_PROPERTY = "sonar.log.console";
@@ -269,7 +279,7 @@ public class LogbackHelper {
   public Level configureRootLogLevel(Level newLevel) {
     Logger rootLogger = getRootContext().getLogger(ROOT_LOGGER_NAME);
     if (!ALLOWED_ROOT_LOG_LEVELS.contains(newLevel)) {
-      throw new IllegalArgumentException(String.format("%s log level is not supported (allowed levels are %s)", newLevel, ALLOWED_ROOT_LOG_LEVELS));
+      throw new IllegalArgumentException(format("%s log level is not supported (allowed levels are %s)", newLevel, ALLOWED_ROOT_LOG_LEVELS));
     }
     rootLogger.setLevel(newLevel);
     return newLevel;
@@ -313,7 +323,7 @@ public class LogbackHelper {
       return new NoRollingPolicy(ctx, filenamePrefix, logsDir, maxFiles);
 
     } else {
-      throw new MessageException(String.format("Unsupported value for property %s: %s", ROLLING_POLICY_PROPERTY, rollingPolicy));
+      throw new MessageException(format("Unsupported value for property %s: %s", ROLLING_POLICY_PROPERTY, rollingPolicy));
     }
   }
 
