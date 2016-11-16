@@ -27,12 +27,12 @@ import org.sonar.server.platform.ServerLogging;
 import static org.sonar.process.LogbackHelper.RootLoggerConfig.newRootLoggerConfigBuilder;
 
 public abstract class ServerProcessLogging {
-  private final String processName;
+  private final LogbackHelper.LogProcess process;
   private final String threadIdFieldPattern;
   private final LogbackHelper helper = new LogbackHelper();
 
-  protected ServerProcessLogging(String processName, String threadIdFieldPattern) {
-    this.processName = processName;
+  protected ServerProcessLogging(LogbackHelper.LogProcess process, String threadIdFieldPattern) {
+    this.process = process;
     this.threadIdFieldPattern = threadIdFieldPattern;
   }
 
@@ -52,9 +52,8 @@ public abstract class ServerProcessLogging {
 
   private void configureRootLogger(Props props) {
     LogbackHelper.RootLoggerConfig config = newRootLoggerConfigBuilder()
-      .setProcessName(processName)
+      .setProcess(process)
       .setThreadIdFieldPattern(threadIdFieldPattern)
-      .setFileNamePrefix(processName)
       .build();
     String logPattern = helper.buildLogPattern(config);
 

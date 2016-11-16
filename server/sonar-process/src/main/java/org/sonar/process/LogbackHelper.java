@@ -52,6 +52,28 @@ import static org.slf4j.Logger.ROOT_LOGGER_NAME;
  */
 public class LogbackHelper {
 
+  public enum LogProcess {
+    APP("app", "sonar"),
+    CE("ce", "ce"),
+    ES("es", "es"),
+    WEB("web", "web");
+
+    private final String processName;
+    private final String fileNamePrefix;
+
+    LogProcess(String processName, String fileNamePrefix) {
+      this.processName = processName;
+      this.fileNamePrefix = fileNamePrefix;
+    }
+
+    public String getProcessName() {
+      return processName;
+    }
+
+    public String getFileNamePrefix() {
+      return fileNamePrefix;
+    }
+  }
   private static final String ALL_LOGS_TO_CONSOLE_PROPERTY = "sonar.log.console";
   private static final String SONAR_LOG_LEVEL_PROPERTY = "sonar.log.level";
   private static final String ROLLING_POLICY_PROPERTY = "sonar.log.rollingPolicy";
@@ -88,46 +110,37 @@ public class LogbackHelper {
   }
 
   public static final class RootLoggerConfig {
-    private final String processName;
+    private final LogProcess process;
     private final String threadIdFieldPattern;
-    private final String fileNamePrefix;
 
     private RootLoggerConfig(Builder builder) {
-      this.processName = builder.processName;
+      this.process = requireNonNull(builder.process);
       this.threadIdFieldPattern = builder.threadIdFieldPattern;
-      this.fileNamePrefix = builder.fileNamePrefix;
     }
 
     public static Builder newRootLoggerConfigBuilder() {
       return new Builder();
     }
 
-    public String getProcessName() {
-      return processName;
+    public LogProcess getProcess() {
+      return process;
     }
 
     String getThreadIdFieldPattern() {
       return threadIdFieldPattern;
     }
 
-    String getFileNamePrefix() {
-      return fileNamePrefix;
-    }
-
     public static final class Builder {
       @CheckForNull
-      public String processName;
+      public LogProcess process;
       private String threadIdFieldPattern = "";
-      @CheckForNull
-      private String fileNamePrefix;
 
       private Builder() {
         // prevents instantiation outside RootLoggerConfig, use static factory method
       }
 
-      public Builder setProcessName(String processName) {
-        checkProcessName(processName);
-        this.processName = processName;
+      public Builder setProcess(LogProcess process) {
+        this.process = requireNonNull(process);
         return this;
       }
 
@@ -136,27 +149,7 @@ public class LogbackHelper {
         return this;
       }
 
-      public Builder setFileNamePrefix(String fileNamePrefix) {
-        checkFileName(fileNamePrefix);
-        this.fileNamePrefix = fileNamePrefix;
-        return this;
-      }
-
-      private static void checkFileName(String fileName) {
-        if (requireNonNull(fileName, "fileNamePrefix can't be null").isEmpty()) {
-          throw new IllegalArgumentException("fileNamePrefix can't be empty");
-        }
-      }
-
-      private static void checkProcessName(String fileName) {
-        if (requireNonNull(fileName, "processName can't be null").isEmpty()) {
-          throw new IllegalArgumentException("processName can't be empty");
-        }
-      }
-
       public RootLoggerConfig build() {
-        checkProcessName(this.processName);
-        checkFileName(this.fileNamePrefix);
         return new RootLoggerConfig(this);
       }
     }
@@ -164,7 +157,7 @@ public class LogbackHelper {
 
   public String buildLogPattern(LogbackHelper.RootLoggerConfig config) {
     return LOG_FORMAT
-      .replace(PROCESS_NAME_PLACEHOLDER, config.getProcessName())
+      .replace(PROCESS_NAME_PLACEHOLDER, config.getProcess().getProcessName())
       .replace(THREAD_ID_PLACEHOLDER, config.getThreadIdFieldPattern());
   }
 
@@ -191,7 +184,7 @@ public class LogbackHelper {
    * Make logback configuration for a process to push all its logs to a log file.
    * <p>
    *   <ul>
-   *     <li>the file's name will use the prefix defined in {@link RootLoggerConfig#getFileNamePrefix()}.</li>
+   *     <li>the file's name will use the prefix defined in {@link RootLoggerConfig#getProcess()#getFileNamePrefix()}.</li>
    *     <li>the file will follow the rotation policy defined in property {@link #ROLLING_POLICY_PROPERTY} and
    *     the max number of files defined in property {@link #MAX_FILES_PROPERTY}</li>
    *     <li>the logs will follow the specified log pattern</li>
@@ -209,8 +202,8 @@ public class LogbackHelper {
   }
 
   public FileAppender<ILoggingEvent> newFileAppender(LoggerContext ctx, Props props, LogbackHelper.RootLoggerConfig config, String logPattern) {
-    RollingPolicy rollingPolicy = createRollingPolicy(ctx, props, config.getFileNamePrefix());
-    FileAppender<ILoggingEvent> fileAppender = rollingPolicy.createAppender("file_" + config.getFileNamePrefix());
+    RollingPolicy rollingPolicy = createRollingPolicy(ctx, props, config.getProcess().getFileNamePrefix());
+    FileAppender<ILoggingEvent> fileAppender = rollingPolicy.createAppender("file_" + config.getProcess().getFileNamePrefix());
     fileAppender.setContext(ctx);
     PatternLayoutEncoder fileEncoder = new PatternLayoutEncoder();
     fileEncoder.setContext(ctx);

@@ -33,7 +33,7 @@ public class SearchLogging {
     LoggerContext ctx = helper.getRootContext();
     ctx.reset();
 
-    LogbackHelper.RootLoggerConfig config = newRootLoggerConfigBuilder().setProcessName("es").setFileNamePrefix("es").build();
+    LogbackHelper.RootLoggerConfig config = newRootLoggerConfigBuilder().setProcess(LogbackHelper.LogProcess.ES).build();
 
     String logPattern = helper.buildLogPattern(config);
     helper.configureGlobalFileLog(props, config, logPattern);
