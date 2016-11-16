@@ -164,7 +164,7 @@
                 </goals>
                 <phase>generate-test-resources</phase>
                 <configuration>
-                  <artifact>${project.groupId}:sonar-application:${project.version}:zip</artifact>
+                  <artifact>${project.groupId}.sonarqube:sonarqube:${project.version}:zip</artifact>
                   <transitive>false</transitive>
                 </configuration>
               </execution>

@@ -26,8 +26,8 @@
       <scope>test</scope>
     </dependency>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>sonar-application</artifactId>
+      <groupId>${project.groupId}.sonarqube</groupId>
+      <artifactId>sonarqube</artifactId>
       <version>${project.version}</version>
       <type>zip</type>
       <scope>provided</scope>

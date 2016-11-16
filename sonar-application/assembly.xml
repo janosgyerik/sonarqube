@@ -13,7 +13,7 @@
       <useTransitiveFiltering>false</useTransitiveFiltering>
       <useProjectArtifact>true</useProjectArtifact>
       <includes>
-        <include>org.sonarsource.sonarqube:sonar-application</include>
+        <include>org.sonarsource.sonarqube.sonarqube:sonarqube</include>
       </includes>
     </dependencySet>
 

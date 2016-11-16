@@ -39,8 +39,8 @@
 
   <dependencies>
     <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>sonar-application</artifactId>
+      <groupId>${project.groupId}.groupId</groupId>
+      <artifactId>sonarqube</artifactId>
       <version>${project.version}</version>
       <type>zip</type>
       <scope>provided</scope>
