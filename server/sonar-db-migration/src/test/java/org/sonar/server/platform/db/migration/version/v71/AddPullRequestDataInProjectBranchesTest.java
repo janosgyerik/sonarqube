@@ -26,18 +26,18 @@ import org.junit.rules.ExpectedException;
 import org.sonar.db.CoreDbTester;
 
 import static java.sql.Types.BLOB;
-import static org.sonar.server.platform.db.migration.version.v71.AddPullRequestBlobInProjectBranches.COLUMN_NAME;
-import static org.sonar.server.platform.db.migration.version.v71.AddPullRequestBlobInProjectBranches.TABLE_NAME;
+import static org.sonar.server.platform.db.migration.version.v71.AddPullRequestDataInProjectBranches.COLUMN_NAME;
+import static org.sonar.server.platform.db.migration.version.v71.AddPullRequestDataInProjectBranches.TABLE_NAME;
 
-public class AddPullRequestBlobInProjectBranchesTest {
+public class AddPullRequestDataInProjectBranchesTest {
 
   @Rule
-  public final CoreDbTester dbTester = CoreDbTester.createForSchema(AddPullRequestBlobInProjectBranchesTest.class, TABLE_NAME + ".sql");
+  public final CoreDbTester dbTester = CoreDbTester.createForSchema(AddPullRequestDataInProjectBranchesTest.class, TABLE_NAME + ".sql");
 
   @Rule
   public ExpectedException expectedException = ExpectedException.none();
 
-  private AddPullRequestBlobInProjectBranches underTest = new AddPullRequestBlobInProjectBranches(dbTester.database());
+  private AddPullRequestDataInProjectBranches underTest = new AddPullRequestDataInProjectBranches(dbTester.database());
 
   @Test
   public void column_is_added_to_table() throws SQLException {

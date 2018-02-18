@@ -38,7 +38,7 @@ public class BranchDaoTest {
 
   private static final long NOW = 1_000L;
   private static final String SELECT_FROM = "select project_uuid as \"projectUuid\", uuid as \"uuid\", branch_type as \"branchType\",  " +
-    "kee as \"kee\", merge_branch_uuid as \"mergeBranchUuid\", pull_request_blob as \"pullRequestBlob\", created_at as \"createdAt\", updated_at as \"updatedAt\" " +
+    "kee as \"kee\", merge_branch_uuid as \"mergeBranchUuid\", pull_request_data as \"pullRequestData\", created_at as \"createdAt\", updated_at as \"updatedAt\" " +
     "from project_branches ";
   private System2 system2 = new TestSystem2().setNow(NOW);
 
@@ -65,7 +65,7 @@ public class BranchDaoTest {
       entry("branchType", "SHORT"),
       entry("kee", "feature/foo"),
       entry("mergeBranchUuid", null),
-      entry("pullRequestBlob", null),
+      entry("pullRequestData", null),
       entry("createdAt", 1_000L),
       entry("updatedAt", 1_000L));
   }

@@ -9,7 +9,7 @@
     pb.key_type as keyType,
     pb.branch_type as branchType,
     pb.merge_branch_uuid as mergeBranchUuid,
-    pb.pull_request_blob as pullRequestBlob
+    pb.pull_request_data as pullRequestData
   </sql>
 
   <insert id="insert" parameterType="map" useGeneratedKeys="false">
@@ -20,7 +20,7 @@
       key_type,
       branch_type,
       merge_branch_uuid,
-      pull_request_blob,
+      pull_request_data,
       created_at,
       updated_at
     ) values (
@@ -30,7 +30,7 @@
       #{dto.keyType, jdbcType=VARCHAR},
       #{dto.branchType, jdbcType=VARCHAR},
       #{dto.mergeBranchUuid, jdbcType=VARCHAR},
-      #{dto.pullRequestBlob, jdbcType=BLOB},
+      #{dto.pullRequestData, jdbcType=BINARY},
       #{now, jdbcType=BIGINT},
       #{now, jdbcType=BIGINT}
     )
@@ -49,7 +49,7 @@
     update project_branches
     set
     merge_branch_uuid = #{dto.mergeBranchUuid, jdbcType=VARCHAR},
-    pull_request_blob = #{dto.pullRequestBlob, jdbcType=BLOB},
+    pull_request_data = #{dto.pullRequestData, jdbcType=BINARY},
     updated_at = #{now, jdbcType=BIGINT}
     where
     uuid = #{dto.uuid, jdbcType=VARCHAR}

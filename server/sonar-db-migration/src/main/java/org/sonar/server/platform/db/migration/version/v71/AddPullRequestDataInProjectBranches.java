@@ -26,12 +26,12 @@ import org.sonar.server.platform.db.migration.def.VarcharColumnDef;
 import org.sonar.server.platform.db.migration.sql.AddColumnsBuilder;
 import org.sonar.server.platform.db.migration.step.DdlChange;
 
-public class AddPullRequestBlobInProjectBranches extends DdlChange {
+public class AddPullRequestDataInProjectBranches extends DdlChange {
 
   static final String TABLE_NAME = "project_branches";
-  static final String COLUMN_NAME = "pull_request_blob";
+  static final String COLUMN_NAME = "pull_request_data";
 
-  public AddPullRequestBlobInProjectBranches(Database db) {
+  public AddPullRequestDataInProjectBranches(Database db) {
     super(db);
   }
 

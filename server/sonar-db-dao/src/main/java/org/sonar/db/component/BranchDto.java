@@ -86,7 +86,7 @@ public class BranchDto {
    * Pull Request data, such as branch name, title, url, and provider specific attributes
    */
   @Nullable
-  private byte[] pullRequestBlob;
+  private byte[] pullRequestData;
 
   public String getUuid() {
     return uuid;
@@ -159,16 +159,16 @@ public class BranchDto {
   }
 
   public BranchDto setPullRequestData(DbProjectBranches.PullRequestData pullRequestData) {
-    this.pullRequestBlob = encodePullRequestData(pullRequestData);
+    this.pullRequestData = encodePullRequestData(pullRequestData);
     return this;
   }
 
   @CheckForNull
   public DbProjectBranches.PullRequestData getPullRequestData() {
-    if (pullRequestBlob == null) {
+    if (pullRequestData == null) {
       return null;
     }
-    return decodePullRequestData(pullRequestBlob);
+    return decodePullRequestData(pullRequestData);
   }
 
   private static byte[] encodePullRequestData(DbProjectBranches.PullRequestData pullRequestData) {
@@ -181,8 +181,8 @@ public class BranchDto {
     }
   }
 
-  private static DbProjectBranches.PullRequestData decodePullRequestData(byte[] pullRequestBlob) {
-    try (ByteArrayInputStream inputStream = new ByteArrayInputStream(pullRequestBlob)) {
+  private static DbProjectBranches.PullRequestData decodePullRequestData(byte[] pullRequestData) {
+    try (ByteArrayInputStream inputStream = new ByteArrayInputStream(pullRequestData)) {
       return DbProjectBranches.PullRequestData.parseFrom(inputStream);
     } catch (IOException e) {
       throw new IllegalStateException("Fail to deserialize pull request data", e);
